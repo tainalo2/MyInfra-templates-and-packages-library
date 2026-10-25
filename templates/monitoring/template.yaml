@@ -1,0 +1,30 @@
+type: myinfra-library-template
+version: 1
+name: "Supervision"
+summary: "La surveillance de vos sites et de vos tâches planifiées, avec des alertes sur votre téléphone. Placez-la chez un autre provider que ce qu'elle surveille."
+sizing: "1 à 2 Go de mémoire"
+translations:
+  en:
+    name: "Monitoring"
+    summary: "Monitoring of your sites and scheduled jobs, with alerts on your phone. Place it at another provider than what it watches."
+    sizing: "1 to 2 GB of memory"
+  pt:
+    name: "Supervisão"
+    summary: "A vigilância dos seus sites e tarefas agendadas, com alertas no seu telemóvel. Coloque-a noutro fornecedor que não o que vigia."
+    sizing: "1 a 2 GB de memória"
+  it:
+    name: "Supervisione"
+    summary: "Il controllo dei tuoi siti e dei lavori pianificati, con avvisi sul telefono. Mettila presso un provider diverso da ciò che sorveglia."
+    sizing: "Da 1 a 2 GB di memoria"
+  de:
+    name: "Überwachung"
+    summary: "Überwachung Ihrer Websites und geplanten Aufgaben, mit Alarmen auf Ihrem Telefon. Stellen Sie sie bei einem anderen Anbieter auf als das Überwachte."
+    sizing: "1 bis 2 GB Arbeitsspeicher"
+cluster: vigie
+servers:
+  - name: vigie-1
+    controlPlane: true
+apps:
+  - package: uptime-kuma
+  - package: healthchecks
+  - package: ntfy

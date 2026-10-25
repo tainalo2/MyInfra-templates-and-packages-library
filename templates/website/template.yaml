@@ -1,0 +1,29 @@
+type: myinfra-library-template
+version: 1
+name: "Site et audience"
+summary: "Un site WordPress et la mesure de sa fréquentation, sans traceur publicitaire."
+sizing: "2 Go de mémoire suffisent"
+translations:
+  en:
+    name: "Website and audience"
+    summary: "A WordPress site and its audience measurement, without advertising trackers."
+    sizing: "2 GB of memory is enough"
+  pt:
+    name: "Site e audiência"
+    summary: "Um site WordPress e a medição da sua audiência, sem rastreadores publicitários."
+    sizing: "2 GB de memória chegam"
+  it:
+    name: "Sito e pubblico"
+    summary: "Un sito WordPress e la misura delle visite, senza tracciamento pubblicitario."
+    sizing: "Bastano 2 GB di memoria"
+  de:
+    name: "Website und Publikum"
+    summary: "Eine WordPress-Website und ihre Besuchermessung, ohne Werbe-Tracker."
+    sizing: "2 GB Arbeitsspeicher genügen"
+cluster: site
+servers:
+  - name: site-1
+    controlPlane: true
+apps:
+  - package: wordpress
+  - package: umami

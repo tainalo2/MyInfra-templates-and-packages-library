@@ -1,0 +1,35 @@
+type: myinfra-library-template
+version: 1
+name: "Espace d'équipe"
+summary: "Fichiers et agendas partagés, messagerie d'équipe, mots de passe communs et documentation, sur trois serveurs pour rester en ligne pendant une panne ou une mise à jour."
+sizing: "4 Go de mémoire par serveur"
+translations:
+  en:
+    name: "Team workspace"
+    summary: "Shared files and calendars, team chat, shared passwords and documentation, on three servers to stay online during an outage or an update."
+    sizing: "4 GB of memory per server"
+  pt:
+    name: "Espaço de equipa"
+    summary: "Ficheiros e agendas partilhados, conversa de equipa, palavras-passe comuns e documentação, em três servidores para ficar online durante uma avaria ou uma atualização."
+    sizing: "4 GB de memória por servidor"
+  it:
+    name: "Spazio di squadra"
+    summary: "File e calendari condivisi, chat di squadra, password comuni e documentazione, su tre server per restare online durante un guasto o un aggiornamento."
+    sizing: "4 GB di memoria per server"
+  de:
+    name: "Team-Arbeitsbereich"
+    summary: "Geteilte Dateien und Kalender, Team-Chat, gemeinsame Passwörter und Dokumentation, auf drei Servern, um bei einem Ausfall oder Update online zu bleiben."
+    sizing: "4 GB Arbeitsspeicher pro Server"
+cluster: equipe
+servers:
+  - name: equipe-1
+    controlPlane: true
+  - name: equipe-2
+    controlPlane: true
+  - name: equipe-3
+    controlPlane: true
+apps:
+  - package: nextcloud
+  - package: mattermost
+  - package: vaultwarden
+  - package: docmost

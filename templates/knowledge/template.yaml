@@ -1,0 +1,31 @@
+type: myinfra-library-template
+version: 1
+name: "Base de connaissances"
+summary: "Un wiki rangé en livres, des notes en markdown écrites à plusieurs et deux outils de schémas."
+sizing: "2 à 4 Go de mémoire"
+translations:
+  en:
+    name: "Knowledge base"
+    summary: "A wiki organised in books, markdown notes written together and two diagram tools."
+    sizing: "2 to 4 GB of memory"
+  pt:
+    name: "Base de conhecimento"
+    summary: "Uma wiki organizada em livros, notas em markdown escritas em conjunto e duas ferramentas de diagramas."
+    sizing: "2 a 4 GB de memória"
+  it:
+    name: "Base di conoscenza"
+    summary: "Un wiki ordinato in libri, note in markdown scritte insieme e due strumenti per schemi."
+    sizing: "Da 2 a 4 GB di memoria"
+  de:
+    name: "Wissensdatenbank"
+    summary: "Ein in Bücher geordnetes Wiki, gemeinsam geschriebene Markdown-Notizen und zwei Diagrammwerkzeuge."
+    sizing: "2 bis 4 GB Arbeitsspeicher"
+cluster: savoir
+servers:
+  - name: savoir-1
+    controlPlane: true
+apps:
+  - package: bookstack
+  - package: hedgedoc
+  - package: excalidraw
+  - package: drawio

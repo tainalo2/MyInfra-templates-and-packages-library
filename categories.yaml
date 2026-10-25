@@ -1,0 +1,67 @@
+# Les catégories, dans l'ordre des écrans. name est celle que les paquets donnent.
+- name: "Sites"
+  translations:
+    en: "Sites"
+    pt: "Sites"
+    it: "Siti"
+    de: "Websites"
+- name: "Collaboration"
+  translations:
+    en: "Collaboration"
+    pt: "Colaboração"
+    it: "Collaborazione"
+    de: "Zusammenarbeit"
+- name: "Code et données"
+  translations:
+    en: "Code and data"
+    pt: "Código e dados"
+    it: "Codice e dati"
+    de: "Code und Daten"
+- name: "Identité"
+  translations:
+    en: "Identity"
+    pt: "Identidade"
+    it: "Identità"
+    de: "Identität"
+- name: "Fichiers et tableaux"
+  translations:
+    en: "Files and tables"
+    pt: "Ficheiros e tabelas"
+    it: "File e tabelle"
+    de: "Dateien und Tabellen"
+- name: "Automatisation"
+  translations:
+    en: "Automation"
+    pt: "Automatização"
+    it: "Automazione"
+    de: "Automatisierung"
+- name: "Échanges"
+  translations:
+    en: "Exchange"
+    pt: "Trocas"
+    it: "Scambi"
+    de: "Austausch"
+- name: "Notes et liens"
+  translations:
+    en: "Notes and links"
+    pt: "Notas e ligações"
+    it: "Note e link"
+    de: "Notizen und Links"
+- name: "Comptes personnels"
+  translations:
+    en: "Personal accounts"
+    pt: "Contas pessoais"
+    it: "Conti personali"
+    de: "Persönliche Konten"
+- name: "Médias"
+  translations:
+    en: "Media"
+    pt: "Média"
+    it: "Media"
+    de: "Medien"
+- name: "Outils"
+  translations:
+    en: "Tools"
+    pt: "Ferramentas"
+    it: "Strumenti"
+    de: "Werkzeuge"

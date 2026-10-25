@@ -1,0 +1,35 @@
+name: check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  # The MyInfra whose rules the library follows.
+  MYINFRA_REF: main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: library
+      - uses: actions/checkout@v4
+        with:
+          repository: tainalo2/MyInfra
+          ref: ${{ env.MYINFRA_REF }}
+          path: myinfra
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: myinfra/go.mod
+          cache-dependency-path: myinfra/go.sum
+      - name: Check the library against the last release
+        working-directory: myinfra
+        env:
+          MYINFRA_LIBRARY_REPO: ${{ github.repository }}
+        run: go run ./cmd/library check ../library -against latest

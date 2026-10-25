@@ -1,0 +1,31 @@
+type: myinfra-library-template
+version: 1
+name: "Papiers et comptes"
+summary: "Vos documents numérisés et classés, des outils PDF, un budget et le suivi des abonnements."
+sizing: "4 Go de mémoire"
+translations:
+  en:
+    name: "Paperwork and accounts"
+    summary: "Your documents scanned and filed, PDF tools, a budget and a watch on subscriptions."
+    sizing: "4 GB of memory"
+  pt:
+    name: "Papéis e contas"
+    summary: "Os seus documentos digitalizados e arquivados, ferramentas PDF, um orçamento e o acompanhamento das subscrições."
+    sizing: "4 GB de memória"
+  it:
+    name: "Documenti e conti"
+    summary: "I tuoi documenti digitalizzati e archiviati, strumenti PDF, un budget e il controllo degli abbonamenti."
+    sizing: "4 GB di memoria"
+  de:
+    name: "Papiere und Finanzen"
+    summary: "Ihre gescannten und abgelegten Dokumente, PDF-Werkzeuge, ein Budget und die Übersicht über Abos."
+    sizing: "4 GB Arbeitsspeicher"
+cluster: papiers
+servers:
+  - name: papiers-1
+    controlPlane: true
+apps:
+  - package: paperless
+  - package: stirling-pdf
+  - package: actual
+  - package: wallos

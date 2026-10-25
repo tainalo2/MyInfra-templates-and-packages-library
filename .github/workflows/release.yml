@@ -1,0 +1,44 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  MYINFRA_REF: main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: library
+      - uses: actions/checkout@v4
+        with:
+          repository: tainalo2/MyInfra
+          ref: ${{ env.MYINFRA_REF }}
+          path: myinfra
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: myinfra/go.mod
+          cache-dependency-path: myinfra/go.sum
+      - name: Check, pack and sign
+        working-directory: myinfra
+        env:
+          MYINFRA_LIBRARY_REPO: ${{ github.repository }}
+          LIBRARY_SIGNING_KEY: ${{ secrets.LIBRARY_SIGNING_KEY }}
+        run: |
+          go run ./cmd/library check ../library -against latest
+          go run ./cmd/library pack ../library "${GITHUB_REF_NAME}" ../out
+          go run ./cmd/library sign ../out/SHA256SUMS
+          go run ./cmd/library verify ../out
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" out/library.tar.gz out/SHA256SUMS out/SHA256SUMS.sig \
+            --repo "${{ github.repository }}" --title "${GITHUB_REF_NAME}" --generate-notes

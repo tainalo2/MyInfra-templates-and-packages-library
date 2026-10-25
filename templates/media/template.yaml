@@ -1,0 +1,31 @@
+type: myinfra-library-template
+version: 1
+name: "Médiathèque"
+summary: "Films, séries, musique et livres audio à regarder et écouter partout, avec les demandes de nouveaux titres."
+sizing: "4 Go de mémoire et beaucoup de disque"
+translations:
+  en:
+    name: "Media library"
+    summary: "Films, series, music and audiobooks to watch and listen to anywhere, with requests for new titles."
+    sizing: "4 GB of memory and plenty of disk"
+  pt:
+    name: "Mediateca"
+    summary: "Filmes, séries, música e audiolivros para ver e ouvir em qualquer lado, com pedidos de novos títulos."
+    sizing: "4 GB de memória e muito disco"
+  it:
+    name: "Mediateca"
+    summary: "Film, serie, musica e audiolibri da guardare e ascoltare ovunque, con le richieste di nuovi titoli."
+    sizing: "4 GB di memoria e molto disco"
+  de:
+    name: "Mediathek"
+    summary: "Filme, Serien, Musik und Hörbücher überall ansehen und hören, mit Wünschen für neue Titel."
+    sizing: "4 GB Arbeitsspeicher und viel Speicherplatz"
+cluster: medias
+servers:
+  - name: medias-1
+    controlPlane: true
+apps:
+  - package: jellyfin
+  - package: jellyseerr
+  - package: navidrome
+  - package: audiobookshelf

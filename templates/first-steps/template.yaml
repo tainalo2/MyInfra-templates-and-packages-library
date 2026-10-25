@@ -1,0 +1,30 @@
+type: myinfra-library-template
+version: 1
+name: "Premiers pas"
+summary: "Une page d'accueil pour vos services, la surveillance de leurs adresses et un coffre de mots de passe : de quoi commencer."
+sizing: "2 Go de mémoire suffisent"
+translations:
+  en:
+    name: "First steps"
+    summary: "A home page for your services, a watch on their addresses and a password vault: enough to get started."
+    sizing: "2 GB of memory is enough"
+  pt:
+    name: "Primeiros passos"
+    summary: "Uma página inicial para os seus serviços, a vigilância dos seus endereços e um cofre de palavras-passe: o suficiente para começar."
+    sizing: "2 GB de memória chegam"
+  it:
+    name: "Primi passi"
+    summary: "Una pagina iniziale per i tuoi servizi, il controllo dei loro indirizzi e una cassaforte per le password: quanto basta per iniziare."
+    sizing: "Bastano 2 GB di memoria"
+  de:
+    name: "Erste Schritte"
+    summary: "Eine Startseite für Ihre Dienste, die Überwachung ihrer Adressen und ein Passwort-Tresor: genug für den Anfang."
+    sizing: "2 GB Arbeitsspeicher genügen"
+cluster: maison
+servers:
+  - name: maison-1
+    controlPlane: true
+apps:
+  - package: homepage
+  - package: uptime-kuma
+  - package: vaultwarden

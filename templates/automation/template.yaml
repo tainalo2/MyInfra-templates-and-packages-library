@@ -1,0 +1,30 @@
+type: myinfra-library-template
+version: 1
+name: "Automatisation"
+summary: "Des enchaînements entre vos services, le suivi des pages qui changent et des notifications pour être prévenu."
+sizing: "2 Go de mémoire suffisent"
+translations:
+  en:
+    name: "Automation"
+    summary: "Workflows between your services, a watch on pages that change and notifications to be told."
+    sizing: "2 GB of memory is enough"
+  pt:
+    name: "Automatização"
+    summary: "Encadeamentos entre os seus serviços, o acompanhamento de páginas que mudam e notificações para ser avisado."
+    sizing: "2 GB de memória chegam"
+  it:
+    name: "Automazione"
+    summary: "Flussi tra i tuoi servizi, il controllo delle pagine che cambiano e notifiche per essere avvisati."
+    sizing: "Bastano 2 GB di memoria"
+  de:
+    name: "Automatisierung"
+    summary: "Abläufe zwischen Ihren Diensten, die Beobachtung sich ändernder Seiten und Benachrichtigungen."
+    sizing: "2 GB Arbeitsspeicher genügen"
+cluster: automates
+servers:
+  - name: automates-1
+    controlPlane: true
+apps:
+  - package: n8n
+  - package: changedetection
+  - package: ntfy

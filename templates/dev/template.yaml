@@ -1,0 +1,31 @@
+type: myinfra-library-template
+version: 1
+name: "Atelier de développement"
+summary: "Des dépôts Git, un registre d'images et un registre de paquets privés, et un éditeur dans le navigateur."
+sizing: "4 Go de mémoire et un disque généreux"
+translations:
+  en:
+    name: "Development workshop"
+    summary: "Git repositories, a private image registry and package registry, and an editor in the browser."
+    sizing: "4 GB of memory and a generous disk"
+  pt:
+    name: "Oficina de desenvolvimento"
+    summary: "Repositórios Git, um registo de imagens e um registo de pacotes privados, e um editor no navegador."
+    sizing: "4 GB de memória e um disco generoso"
+  it:
+    name: "Officina di sviluppo"
+    summary: "Repository Git, un registro di immagini e un registro di pacchetti privati, e un editor nel browser."
+    sizing: "4 GB di memoria e un disco capiente"
+  de:
+    name: "Entwicklungswerkstatt"
+    summary: "Git-Repositories, eine private Image- und Paket-Registry und ein Editor im Browser."
+    sizing: "4 GB Arbeitsspeicher und eine großzügige Festplatte"
+cluster: atelier
+servers:
+  - name: atelier-1
+    controlPlane: true
+apps:
+  - package: forgejo
+  - package: registry
+  - package: verdaccio
+  - package: code-server
