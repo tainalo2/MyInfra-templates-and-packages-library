@@ -52,7 +52,14 @@ Voir [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Releases
 
-Une release est publiée à chaque tag `v*`. Le workflow `release.yml` :
+Le workflow **Publication** (`release.yml`) publie une release, de deux façons :
+
+- lancé depuis l'onglet Actions avec la version voulue (`1.4.0`) : le tag est posé sur le commit choisi ;
+- ou en poussant un tag : `git tag v1.4.0 && git push origin v1.4.0`.
+
+La version doit être plus récente que la dernière release : MyInfra ignore les autres. Une version avec un suffixe (`1.4.0-rc.1`) est publiée en préversion, et MyInfra ne la propose pas. Relancer une publication remplace les fichiers de sa release.
+
+Le workflow :
 
 1. vérifie la bibliothèque et compare les versions à la release précédente ;
 2. écrit `library.tar.gz` (avec `index.json`, l'empreinte de chaque fichier) et `SHA256SUMS` ;
