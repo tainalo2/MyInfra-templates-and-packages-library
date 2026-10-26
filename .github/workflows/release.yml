@@ -1,18 +1,90 @@
-name: release
+name: Publication
+
+# Publie une version de la bibliothèque : l'archive, ses sommes et leur
+# signature, dans une release GitHub que chaque MyInfra récupère.
+#
+#   - pousser un tag : git tag v1.4.0 && git push origin v1.4.0
+#   - ou lancer « Publication » depuis l'onglet Actions avec la version voulue :
+#     le tag est créé sur le commit choisi.
+#
+# Une version avec un suffixe (1.4.0-rc.1) est publiée en préversion : MyInfra
+# ne prend que la dernière release, il ne la propose pas.
 
 on:
   push:
-    tags: ["v*"]
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version à publier, par exemple 1.4.0 ou 1.4.0-rc.1"
+        required: true
+        type: string
 
 permissions:
   contents: write
 
+concurrency:
+  group: publication-${{ inputs.version || github.ref_name }}
+  cancel-in-progress: false
+
 env:
+  # The MyInfra whose rules the library follows and that signs it.
   MYINFRA_REF: main
 
 jobs:
-  release:
+  version:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.ref.outputs.tag }}
+      version: ${{ steps.ref.outputs.version }}
+      prerelease: ${{ steps.ref.outputs.prerelease }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: ref
+        env:
+          INPUT: ${{ inputs.version }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            ver="${INPUT#v}"
+          else
+            ver="${GITHUB_REF_NAME#v}"
+          fi
+          if ! printf '%s' "$ver" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Version invalide : « $ver ». Attendu : 1.2.3 ou 1.2.3-rc.1."
+            exit 1
+          fi
+          tag="v$ver"
+          # Un tag déjà posé sur un autre commit n'est pas déplacé.
+          existing=$(git ls-remote --tags origin "refs/tags/$tag^{}" "refs/tags/$tag" | awk 'END { print $1 }')
+          if [ -n "$existing" ] && [ "$existing" != "$GITHUB_SHA" ]; then
+            echo "::error::Le tag $tag existe déjà sur le commit $existing. Choisissez une autre version."
+            exit 1
+          fi
+          # MyInfra ne prend qu'une release plus récente que la sienne.
+          latest=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName 2>/dev/null || true)
+          if [ -n "$latest" ] && [ "$latest" != "$tag" ] && [ "$(printf '%s\n%s\n' "${latest#v}" "$ver" | sort -V | tail -1)" != "$ver" ]; then
+            echo "::error::$tag n'est pas plus récente que $latest, la dernière release : MyInfra l'ignorerait."
+            exit 1
+          fi
+          prerelease=false
+          case "$ver" in *-*) prerelease=true ;; esac
+          {
+            echo "tag=$tag"
+            echo "version=$ver"
+            echo "prerelease=$prerelease"
+          } >> "$GITHUB_OUTPUT"
+          echo "Publication de $tag (préversion : $prerelease, précédente : ${latest:-aucune})" >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ needs.version.outputs.tag }}
+      VERSION: ${{ needs.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,19 +98,48 @@ jobs:
         with:
           go-version-file: myinfra/go.mod
           cache-dependency-path: myinfra/go.sum
-      - name: Check, pack and sign
+      # Rien n'est publié si la bibliothèque ne passe pas les règles de MyInfra,
+      # ou si un élément changé n'a pas monté sa version.
+      - name: Vérification
+        working-directory: myinfra
+        env:
+          MYINFRA_LIBRARY_REPO: ${{ github.repository }}
+        run: go run ./cmd/library check ../library -against latest
+      - name: Archive et signature
         working-directory: myinfra
         env:
           MYINFRA_LIBRARY_REPO: ${{ github.repository }}
           LIBRARY_SIGNING_KEY: ${{ secrets.LIBRARY_SIGNING_KEY }}
         run: |
-          go run ./cmd/library check ../library -against latest
-          go run ./cmd/library pack ../library "${GITHUB_REF_NAME}" ../out
+          if [ -z "$LIBRARY_SIGNING_KEY" ]; then
+            echo "::error::Le secret LIBRARY_SIGNING_KEY manque : MyInfra refuserait une release non signée."
+            exit 1
+          fi
+          go run ./cmd/library pack ../library "$VERSION" ../out
           go run ./cmd/library sign ../out/SHA256SUMS
+          # Refusée si la signature n'est pas d'une clé que MyInfra connaît.
           go run ./cmd/library verify ../out
-      - name: Publish
+      - name: Release
+        working-directory: library
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" out/library.tar.gz out/SHA256SUMS out/SHA256SUMS.sig \
-            --repo "${{ github.repository }}" --title "${GITHUB_REF_NAME}" --generate-notes
+          files="../out/library.tar.gz ../out/SHA256SUMS ../out/SHA256SUMS.sig"
+          flags=""
+          if [ "${{ needs.version.outputs.prerelease }}" = "true" ]; then
+            flags="--prerelease"
+          fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # Une relance remplace les fichiers de la release déjà créée, sans toucher à ses notes.
+            # shellcheck disable=SC2086
+            gh release upload "$TAG" $files --clobber
+          else
+            # Lancée à la main, la release pose le tag sur le commit choisi.
+            # shellcheck disable=SC2086
+            gh release create "$TAG" $files \
+              --target "$GITHUB_SHA" \
+              --title "$TAG" \
+              --generate-notes \
+              $flags
+          fi
+          echo "Release : https://github.com/${GITHUB_REPOSITORY}/releases/tag/$TAG" >> "$GITHUB_STEP_SUMMARY"
