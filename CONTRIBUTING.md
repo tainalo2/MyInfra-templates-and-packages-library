@@ -58,6 +58,21 @@ apps:
 
 Un template ne cite que des paquets sans question (sans `inputs`), et un nombre impair de plans de contrôle.
 
+## Partager dans la communauté
+
+Un paquet ou un template qui n'a pas sa place dans la bibliothèque elle-même (une pile de plusieurs applications reliées, un usage plus rare) va dans `community/`, avec les mêmes fichiers et les mêmes règles :
+
+```
+community/order.txt                     les paquets de la communauté, dans l'ordre des écrans
+community/packages/<id>/package.yaml
+community/packages/<id>/item.yaml
+community/templates/<id>/template.yaml
+community/templates/<id>/item.yaml
+community/templates/order.txt
+```
+
+L'identifiant ne doit pas déjà exister dans la bibliothèque. Un template de la communauté peut citer des paquets de la bibliothèque et de la communauté ; un template de la bibliothèque ne cite que ceux de la bibliothèque.
+
 ## Vérifier
 
 La CI vérifie chaque PR avec les règles de MyInfra lui-même. En local, depuis un clone de MyInfra :

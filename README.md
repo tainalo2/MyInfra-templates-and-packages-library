@@ -14,10 +14,20 @@ packages/<id>/item.yaml       sa version
 templates/<id>/template.yaml  un cluster et des paquets qui vont bien ensemble
 templates/<id>/item.yaml      sa version
 logos/<nom>.svg|png           les logos que simple-icons n'a pas (voir logos/SOURCES.md)
+community/                    les paquets et templates partagés par la communauté,
+                              rangés de la même façon (order.txt, packages/, templates/)
 ```
 
 - **Un paquet** a le même format que ceux de l'éditeur de paquets de MyInfra (Applications > Paquets). Le guide de cet éditeur décrit chaque champ.
 - **Un template** (`type: myinfra-library-template`) donne un cluster, ses serveurs et des paquets de la bibliothèque. Il ne contient ni fournisseur, ni offre, ni clé : chacun les choisit en prenant le template.
+
+## Communauté
+
+`community/` accueille les paquets et templates que des personnes partagent, à côté de ceux de la bibliothèque. Ils suivent les mêmes règles et la même CI. MyInfra les affiche avec un badge « Communauté » et un filtre.
+
+- **Les identifiants sont communs** à la bibliothèque et à la communauté : un élément de la communauté peut rejoindre la bibliothèque sans changer d'identifiant.
+- **Un template de la bibliothèque ne cite pas un paquet de la communauté.** Un template de la communauté peut citer les deux.
+- Un MyInfra plus ancien que la communauté ignore `community/`.
 
 ## Versions
 
